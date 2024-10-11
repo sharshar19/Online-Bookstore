@@ -1,4 +1,5 @@
-﻿using Online_Bookstore.Models;
+﻿using Microsoft.AspNetCore.Identity;
+using Online_Bookstore.Models;
 
 namespace Online_Bookstore.Services
 {
@@ -6,12 +7,12 @@ namespace Online_Bookstore.Services
     {
         private readonly BookContext _bookContext;
         private readonly IBookIRepository _bookRepository;
-        private readonly IUserRepository _userRepository;
-        public OrdersRepository(BookContext bookContext, IBookIRepository bookIRepository, IUserRepository userRepository)
+        private readonly UserManager<User> _userManager;
+        public OrdersRepository(BookContext bookContext, IBookIRepository bookIRepository, UserManager<User> userManager)
         {
             this._bookContext = bookContext;
             _bookRepository = bookIRepository;
-            _userRepository = userRepository;
+            _userManager = userManager;
 
         }
         public void CreateOrders(Orders orders)
@@ -45,7 +46,7 @@ namespace Online_Bookstore.Services
             return (from _orders in _bookContext.orders where _orders.OrderId == id select _orders).FirstOrDefault();
         }
 
-        public void UpdateOrders(Orders orders)
+        public async void UpdateOrders(Orders orders)
         {
             var dbOrders = GetOrdersById(orders.OrderId);
             if (dbOrders == null)
@@ -57,7 +58,7 @@ namespace Online_Bookstore.Services
 
             var UserId = dbOrders.UserId;
 
-            if (UserId == null || _userRepository.GetUserById(UserId) == null)
+            if (UserId == null || await _userManager.FindByIdAsync(UserId) == null)
             {
                 throw new NullReferenceException();
             }

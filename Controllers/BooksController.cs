@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Online_Bookstore.Models;
 using Online_Bookstore.Services;
 
 namespace Online_Bookstore.Controllers
 {
+    [Authorize]
     [Route("api/books")]
     [ApiController]
     public class BooksController : ControllerBase

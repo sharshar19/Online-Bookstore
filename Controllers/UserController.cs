@@ -13,8 +13,8 @@ namespace Online_Bookstore.Controllers
     [ApiController]
     public class UserController(IConfiguration configuration, UserManager<User> userManager) : ControllerBase
     {
-        private readonly IConfiguration _configuration; // To get congitation from app.json
-        private readonly UserManager<User> _userManager; // user manager services have login register that's why I don't need a repo. for it
+        private readonly IConfiguration _configuration = configuration; // To get congitation from app.json
+        private readonly UserManager<User> _userManager = userManager; // user manager services have login register that's why I don't need a repo. for it
 
         [HttpGet]
         [Route("")]

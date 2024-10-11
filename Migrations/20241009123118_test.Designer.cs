@@ -13,7 +13,9 @@ namespace Online_Bookstore.Migrations
 {
     [DbContext(typeof(BookContext))]
     [Migration("20241009123118_test")]
+#pragma warning disable CS8981 // The type name only contains lower-cased ascii characters. Such names may become reserved for the language.
     partial class test
+#pragma warning restore CS8981 // The type name only contains lower-cased ascii characters. Such names may become reserved for the language.
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

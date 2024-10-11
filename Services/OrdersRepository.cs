@@ -3,18 +3,11 @@ using Online_Bookstore.Models;
 
 namespace Online_Bookstore.Services
 {
-    public class OrdersRepository : IOrdersRepository
+    public class OrdersRepository(BookContext bookContext, UserManager<User> userManager) : IOrdersRepository
     {
-        private readonly BookContext _bookContext;
-        private readonly IBookIRepository _bookRepository;
-        private readonly UserManager<User> _userManager;
-        public OrdersRepository(BookContext bookContext, IBookIRepository bookIRepository, UserManager<User> userManager)
-        {
-            this._bookContext = bookContext;
-            _bookRepository = bookIRepository;
-            _userManager = userManager;
+        private readonly BookContext _bookContext = bookContext;
+        private readonly UserManager<User> _userManager = userManager;
 
-        }
         public void CreateOrders(Orders orders)
         {
             _bookContext.Add(orders);
@@ -48,13 +41,7 @@ namespace Online_Bookstore.Services
 
         public async void UpdateOrders(Orders orders)
         {
-            var dbOrders = GetOrdersById(orders.OrderId);
-            if (dbOrders == null)
-            {
-                throw new NullReferenceException();
-            }
-
-            var orderId = dbOrders.OrderId;
+            var dbOrders = GetOrdersById(orders.OrderId) ?? throw new NullReferenceException();
 
             var UserId = dbOrders.UserId;
 

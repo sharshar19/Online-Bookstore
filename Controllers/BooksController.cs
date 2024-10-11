@@ -9,23 +9,20 @@ namespace Online_Bookstore.Controllers
     [Authorize]
     [Route("api/books")]
     [ApiController]
-    public class BooksController : ControllerBase
+    public class BooksController(IBookIRepository bookRepository) : ControllerBase
     {
-        private readonly IBookIRepository _bookRepository;
-        public BooksController(IBookIRepository bookRepository) {
-            _bookRepository = bookRepository;
-        
-        }
+        private readonly IBookIRepository _bookRepository = bookRepository;
+
         [HttpGet]
         [Route("/")]
-        public IActionResult getBooks()
+        public IActionResult GetBooks()
         {
             return Ok(_bookRepository.GetBooks());
         }
 
         [HttpPost]
         [Route("/")]
-        public IActionResult postBooks(Book book)
+        public IActionResult GetBooks(Book book)
         {
             if (!ModelState.IsValid) { 
                 return BadRequest(ModelState);
@@ -36,7 +33,7 @@ namespace Online_Bookstore.Controllers
 
         [HttpGet]
         [Route("/{id}")]
-        public IActionResult getBooks(int id)
+        public IActionResult GetBooks(int id)
         {
             var book = _bookRepository.GetBookById(id);
             if (book == null)

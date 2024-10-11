@@ -15,11 +15,6 @@ namespace Online_Bookstore.Controllers
     {
         private readonly IConfiguration _configuration; // To get congitation from app.json
         private readonly UserManager<User> _userManager; // user manager services have login register that's why I don't need a repo. for it
-        
-        public UserController(IConfiguration configuration, UserManager<User> userManager) { 
-            _configuration = configuration;
-            _userManager = userManager;
-        }
 
         [HttpGet]
         [Route("")]

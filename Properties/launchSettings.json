@@ -5,7 +5,7 @@
     "anonymousAuthentication": true,
     "iisExpress": {
       "applicationUrl": "http://localhost:36532",
-      "sslPort": 44322
+      "sslPort": 44322 // if it is 0 this means that I'm using http not https
     }
   },
   "profiles": {
@@ -38,4 +38,4 @@
       }
     }
   }
-}
+} 

@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Online_Bookstore.Models;
 using Online_Bookstore.Services;
+using Online_Bookstore.Services.Interfaces;
 using Online_Bookstore.Validators;
 using System.Reflection;
 using System.Text;
@@ -15,7 +17,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers();  // Automatically Add all Controllers 
+//builder.Services.AddFluentValidation(v =>
+//{
+//    v.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+//});
 builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
 builder.Services.AddTransient<IValidator<Book>, BookValidator>();
 
@@ -79,6 +85,36 @@ builder.Services.AddTransient<IOrderItemsRepository,OrderItemsRepository>();
 builder.Services.AddTransient<IShoppingCartRepository, ShoppingCartRepository>();
 builder.Services.AddTransient<IReviewRepository,ReviewRepository>();
 
+// To make swagger take token to authenticate 
+builder.Services.AddSwaggerGen(option =>
+{
+    option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
+    option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please enter a valid token",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "Bearer"
+    });
+    option.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type=ReferenceType.SecurityScheme,
+                    Id="Bearer"
+                }
+            },
+            new string[]{}
+        }
+    });
+});
+
+
 // Returns an instance of WebApplication
 var app = builder.Build();
 
@@ -94,7 +130,7 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
+app.MapControllers(); // Automatically call useRouting and UseEndpoints 
 
 // Starting Server
 app.Run();

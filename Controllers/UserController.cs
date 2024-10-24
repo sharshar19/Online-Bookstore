@@ -13,7 +13,7 @@ namespace Online_Bookstore.Controllers
     [ApiController]
     public class UserController(IConfiguration configuration, UserManager<User> userManager) : ControllerBase
     {
-        private readonly IConfiguration _configuration = configuration; // To get congitation from app.json
+        private readonly IConfiguration _configuration = configuration; // To get configration from app.json
         private readonly UserManager<User> _userManager = userManager; // user manager services have login register that's why I don't need a repo. for it
 
         [HttpGet]
@@ -72,14 +72,17 @@ namespace Online_Bookstore.Controllers
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.NameIdentifier, user.Id)
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim(ClaimTypes.Email, user.Email ?? "email123"),
+                new Claim("phone", user.PhoneNumber ?? "phone123")
+
             };
 
             SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"] ?? throw new ArgumentNullException(_configuration["Jwt:Key"])));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
 
-            if (double.TryParse(_configuration["Jwt:DurationInMinutes"], out double expires))
+            if (!double.TryParse(_configuration["Jwt:DurationInMinutes"], out double expires))
             {
                 throw new Exception();
             }

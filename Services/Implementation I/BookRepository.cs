@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Online_Bookstore.Models;
+using Online_Bookstore.Services.Interfaces;
 
 namespace Online_Bookstore.Services
 {
